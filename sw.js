@@ -1,4 +1,4 @@
-const CACHE_NAME = 'patient-registration-cache-v4';
+const CACHE_NAME = 'patient-registration-cache-v5';
 const URLS_TO_CACHE = [
     './',
     'index.html',
@@ -8,7 +8,7 @@ const URLS_TO_CACHE = [
     'login.js',
     'style.css',
     'manifest.json',
-    'images/icon.svg',
+    'icon.svg',
     'images/icon-192x192.png',
     'images/icon-512x512.png'
 ];
