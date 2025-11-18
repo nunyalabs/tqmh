@@ -103,6 +103,21 @@ function addUser(user) {
     });
 }
 
+function deleteUser(userId) {
+    return new Promise((resolve, reject) => {
+        openDb().then(db => {
+            const transaction = db.transaction([USER_STORE], 'readwrite');
+            const store = transaction.objectStore(USER_STORE);
+            // Can't delete the admin user with ID 1 for safety
+            if (userId === 1) return reject('Cannot delete the primary admin user.');
+            const request = store.delete(userId);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject('Error deleting user: ' + event.target.error);
+        });
+    });
+}
+
 function getAllUsers() {
     return new Promise((resolve, reject) => {
         openDb().then(db => {

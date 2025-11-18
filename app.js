@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.viewVisits = viewVisits;
     window.updatePatientDetails = updatePatientDetails;
     window.deleteUserById = deleteUserById;
+    let deferredPrompt;
 
     // To track if the registration form is in 'update' mode
     let patientToUpdateId = null;
@@ -227,6 +228,29 @@ document.addEventListener('DOMContentLoaded', () => {
             p.fullName.toLowerCase().includes(searchTerm) || p.registrationNumber.toLowerCase().includes(searchTerm)
         );
         renderPatientTable(filteredPatients);
+    });
+
+    // --- PWA Install Prompt ---
+    const installAppButton = document.getElementById('installAppButton');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Update UI to notify the user they can install the PWA
+        installAppButton.classList.remove('hidden');
+    });
+
+    installAppButton.addEventListener('click', async () => {
+        // Hide the app provided install promotion
+        installAppButton.classList.add('hidden');
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        await deferredPrompt.userChoice;
+        // We've used the prompt, and can't use it again, throw it away
+        deferredPrompt = null;
     });
 
     // Service Worker Registration

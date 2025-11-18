@@ -1,13 +1,16 @@
-const CACHE_NAME = 'patient-registration-cache-v2';
+const CACHE_NAME = 'patient-registration-cache-v3';
 const URLS_TO_CACHE = [
     '/',
-    '/index.html',
-    '/login.html',
-    '/app.js',
-    '/db.js',
-    '/login.js',
-    '/style.css',
-    '/manifest.json'
+    'index.html',
+    'login.html',
+    'app.js',
+    'db.js',
+    'login.js',
+    'style.css',
+    'manifest.json',
+    'images/icon.svg',
+    'images/icon-192x192.png',
+    'images/icon-512x512.png'
 ];
 
 // Install a service worker
