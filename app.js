@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- GLOBAL FUNCTIONS (within DOMContentLoaded) ---
     window.viewVisits = viewVisits;
     window.updatePatientDetails = updatePatientDetails;
+    window.deleteUserById = deleteUserById;
 
     // To track if the registration form is in 'update' mode
     let patientToUpdateId = null;
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
+            navigator.serviceWorker.register('sw.js').then(registration => {
                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
             }, err => {
                 console.log('ServiceWorker registration failed: ', err);
@@ -306,9 +307,16 @@ document.addEventListener('DOMContentLoaded', () => {
         usersTableBody.innerHTML = '';
         users.forEach(user => {
             const row = document.createElement('tr');
-            row.innerHTML = `<td>${user.username}</td><td>${user.role}</td>`;
+            const isCurrentUser = user.id === currentUser.id;
+            row.innerHTML = `
+                <td>${user.username} ${isCurrentUser ? '(You)' : ''}</td>
+                <td>${user.role}</td>
+                <td>
+                    <button class="btn btn-sm btn-secondary action-delete-user hidden" onclick="deleteUserById(${user.id})" ${isCurrentUser ? 'disabled' : ''}>Delete</button>
+                </td>`;
             usersTableBody.appendChild(row);
         });
+        applyPermissions();
     }
 
     async function loadFacilityName() {
@@ -382,6 +390,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (role === 'clinician') {
             document.querySelectorAll('.action-record-visit').forEach(el => el.classList.remove('hidden'));
         }
+
+        if (role === 'admin') {
+            document.querySelectorAll('.action-record-visit').forEach(el => el.classList.remove('hidden'));
+        }
     }
 
     // --- INITIAL LOAD ---
@@ -391,12 +403,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // applyPermissions is called within loadPatients -> renderPatientTable
 
     // --- Global Function Definitions ---
-    function viewVisits(patientId) {
+    async function viewVisits(patientId) {
+        // Clear form from previous data
+        consultationForm.reset();
         document.getElementById('consultationPatientId').value = patientId;
+
+        // Pre-fill with last visit data
+        try {
+            const visits = await getVisitsForPatient(patientId);
+            if (visits.length > 0) {
+                // Sort by date descending to get the latest visit
+                visits.sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
+                const lastVisit = visits[0];
+                for (const key in lastVisit) {
+                    const field = document.getElementById(key);
+                    if (field) field.value = lastVisit[key];
+                }
+            }
+        } catch (error) {
+            console.error('Could not pre-fill last visit data:', error);
+        }
+
         // Use the same navigation logic as button clicks
-        document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-        document.getElementById('consultationPage').classList.remove('hidden');
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        showPage(consultationPage, null); // Show page without activating a nav button
     }
 
     async function updatePatientDetails(patientId) {
@@ -418,6 +447,18 @@ document.addEventListener('DOMContentLoaded', () => {
             showPage(registrationPage, navRegister);
         } catch (error) {
             console.error('Failed to load patient details for update:', error);
+        }
+    }
+
+    async function deleteUserById(userId) {
+        if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            try {
+                await deleteUser(userId);
+                alert('User deleted successfully.');
+                loadUsers(); // Refresh the user list
+            } catch (error) {
+                alert(`Failed to delete user: ${error}`);
+            }
         }
     }
 });
