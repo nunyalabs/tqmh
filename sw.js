@@ -1,6 +1,6 @@
-const CACHE_NAME = 'patient-registration-cache-v3';
+const CACHE_NAME = 'patient-registration-cache-v4';
 const URLS_TO_CACHE = [
-    '/',
+    './',
     'index.html',
     'login.html',
     'app.js',
