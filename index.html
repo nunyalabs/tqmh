@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <a href="#" class="logo">
+                    <h1 id="headerFacilityName" class="header-title">Clinical MS</h1>
+                </a>
+            </div>
+            <nav class="nav">
+                <button id="navDashboard" class="nav-btn active">Dashboard</button>
+                <button id="navRegister" class="nav-btn hidden">Register Patient</button>
+                <button id="navSettings" class="nav-btn hidden">Settings</button>
+                <button id="logoutButton" class="btn btn-secondary" style="margin-left: auto;">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Page: Dashboard -->
+        <section id="dashboardPage" class="container">
+            <div class="stats-bar">
+                <h2 class="section-title">Patient Dashboard</h2>
+                <div class="stats-badge">Total Patients: <span id="patientCount">0</span></div>
+            </div>
+            <div class="mb-4 flex items-center justify-between">
+                <div class="search-wrapper" style="max-width: 400px;">
+                     <input type="text" id="searchInput" class="search-input" placeholder="Search patients by name or ID...">
+                </div>
+                <button id="exportCsv" class="btn btn-secondary hidden">Export to CSV</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Reg. Number</th>
+                            <th>Full Name</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Telephone</th>
+                            <th>Insurance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientsTableBody">
+                        <!-- Patient rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Page: Patient Registration -->
+        <section id="registrationPage" class="container hidden">
+            <form id="registrationForm" class="card form-card">
+                <h2 class="section-title text-center">Patient Registration</h2>
+                
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Identifiers</h3>
+                    <label for="registrationNumber" class="form-label">Registration Number</label>
+                    <input type="text" class="form-input" id="registrationNumber" required>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Demographics</h3>
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="registrationDate" class="form-label">Registration Date</label>
+                            <input type="date" class="form-input" id="registrationDate" required>
+                        </div>
+                        <div>
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-input" id="fullName" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="grid grid-cols-3">
+                        <div>
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-input" id="dob" required>
+                        </div>
+                        <div>
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-input" id="age" readonly>
+                        </div>
+                        <div>
+                            <label for="sex" class="form-label">Sex</label>
+                            <select class="form-select" id="sex" required>
+                                <option value="">Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="form-group">
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="maritalStatus" class="form-label">Marital Status</label>
+                            <select class="form-select" id="maritalStatus">
+                                <option value="">Select...</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="occupation" class="form-label">Occupation</label>
+                            <input type="text" class="form-input" id="occupation">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="religion" class="form-label">Religion</label>
+                    <select class="form-select" id="religion">
+                        <option value="">Select...</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Contact</h3>
+                     <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="homeAddress" class="form-label">Home Address</label>
+                            <input type="text" class="form-input" id="homeAddress">
+                        </div>
+                        <div>
+                            <label for="telephone" class="form-label">Telephone</label>
+                            <input type="tel" class="form-input" id="telephone">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Next of Kin</h3>
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="kinName" class="form-label">Name of Nearest Relative</label>
+                            <input type="text" class="form-input" id="kinName">
+                        </div>
+                        <div>
+                            <label for="kinRelation" class="form-label">Relation to Patient</label>
+                            <select class="form-select" id="kinRelation">
+                                <option value="">Select...</option>
+                                <option value="Spouse">Spouse</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Sibling">Sibling</option>
+                                <option value="Child">Child</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group hidden" id="kinRelationOtherWrapper">
+                    <label for="kinRelationOther" class="form-label">Specify Relation</label>
+                    <textarea class="form-textarea" id="kinRelationOther" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="kinContact" class="form-label">Contact of Nearest Relative</label>
+                    <input type="text" class="form-input" id="kinContact">
+                </div>
+
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Insurance</h3>
+                    <label for="insuranceType" class="form-label">Insurance Type</label>
+                    <select class="form-select" id="insuranceType" style="max-width: 250px;">
+                        <option value="None">None</option>
+                        <option value="NHIS">NHIS</option>
+                        <option value="Private">Private Insurance</option>
+                    </select>
+                </div>
+                <div id="nhisFields" class="hidden form-group">
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="nhisNumber" class="form-label">NHIS Number</label>
+                            <input type="text" class="form-input" id="nhisNumber">
+                        </div>
+                        <div>
+                            <label for="cccCode" class="form-label">CCC Code</label>
+                            <input type="text" class="form-input" id="cccCode">
+                        </div>
+                    </div>
+                </div>
+                <div id="privateInsuranceFields" class="hidden form-group">
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="privateProvider" class="form-label">Private Provider</label>
+                            <select class="form-select" id="privateProvider">
+                                <option value="">Select Provider...</option>
+                                <option value="PREMIER">PREMIER</option>
+                                <option value="GAB Health Insurance">GAB Health Insurance</option>
+                                <option value="NationWide Medical Insurance">NationWide Medical Insurance</option>
+                                <option value="DOSH Health Insurance">DOSH Health Insurance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="insuranceNumber" class="form-label">Insurance Number</label>
+                            <input type="text" class="form-input" id="insuranceNumber">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="footer-subtitle">Administrative</h3>
+                    <label for="remarks" class="form-label">Remarks</label>
+                    <textarea class="form-textarea" id="remarks" rows="3"></textarea>
+                </div>
+
+                <button type="submit" id="registrationFormSubmitButton" class="btn btn-primary">Register Patient</button>
+            </form>
+        </section>
+
+        <!-- Page: Clinical Consultation -->
+        <section id="consultationPage" class="container hidden">
+            <form id="consultationForm" class="card form-card">
+                <h2 class="section-title text-center">Clinical Consultation</h2>
+                <input type="hidden" id="consultationPatientId">
+
+                <div class="form-group">
+                    <label for="history" class="form-label">History</label>
+                    <textarea class="form-textarea" id="history" rows="5" placeholder="Patient's presenting complaints and history."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="examinationFindings" class="form-label">Examination Findings</label>
+                    <textarea class="form-textarea" id="examinationFindings" rows="5" placeholder="Notes from the physical examination."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="investigations" class="form-label">Investigations</label>
+                    <textarea class="form-textarea" id="investigations" rows="3" placeholder="Labs/imaging requested or results."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="diagnosis" class="form-label">Diagnosis</label>
+                    <textarea class="form-textarea" id="diagnosis" rows="2" placeholder="General or preliminary diagnosis."></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="grid md:grid-cols-2">
+                        <div>
+                            <label for="principalDiagnosis" class="form-label">Principal Diagnosis</label>
+                            <textarea class="form-textarea" id="principalDiagnosis" rows="2" placeholder="The main condition being treated."></textarea>
+                        </div>
+                        <div>
+                            <label for="additionalDiagnosis" class="form-label">Additional Diagnosis</label>
+                            <textarea class="form-textarea" id="additionalDiagnosis" rows="2" placeholder="Co-morbidities or secondary conditions."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="treatment" class="form-label">Treatment</label>
+                    <textarea class="form-textarea" id="treatment" rows="5" placeholder="Medication, procedures, and management plan."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="clinicalRemarks" class="form-label">Remarks</label>
+                    <textarea class="form-textarea" id="clinicalRemarks" rows="2" placeholder="Follow-up notes or specific clinical comments."></textarea>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="submit" class="btn btn-primary">Save Consultation</button>
+                    <button type="button" id="closeConsultation" class="btn btn-secondary">Close</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Page: Settings -->
+        <section id="settingsPage" class="container hidden">
+            <h2 class="section-title">Settings</h2>
+
+            <!-- Facility Metadata -->
+            <div class="card form-card mb-6">
+                <h3 class="section-title">Facility Metadata</h3>
+                <form id="facilityForm">
+                    <div class="form-group">
+                        <label for="facilityName" class="form-label">Facility Name</label>
+                        <input type="text" id="facilityName" class="form-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Metadata</button>
+                </form>
+            </div>
+
+            <!-- User Management -->
+            <div class="card form-card mb-6">
+                <h3 class="section-title">User Management</h3>
+                <form id="userForm" class="mb-4">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="newUsername" class="form-label">Username</label>
+                            <input type="text" id="newUsername" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">Password</label>
+                            <input type="password" id="newPassword" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole" class="form-label">Role</label>
+                            <select id="userRole" class="form-select" required>
+                                <option value="records">Records Staff</option>
+                                <option value="clinician">Clinician</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </form>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Username</th><th>Role</th></tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- User list here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data Portability -->
+            <div class="card form-card">
+                <h3 class="section-title">Data Portability</h3>
+                <div class="flex gap-4">
+                    <button id="exportJson" class="btn btn-secondary">Export All Data (JSON)</button>
+                    <div class="form-group">
+                        <label for="importJson" class="form-label">Import from JSON</label>
+                        <input type="file" id="importJson" accept=".json" class="form-input">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Developed with ❤️ by Godsway Sackey | 0269609634</p>
+            <p><a href="https://github.com/nunyalabs/tqmh" target="_blank" rel="noopener noreferrer">View on GitHub for Testing</a></p>
+        </div>
+    </footer>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
