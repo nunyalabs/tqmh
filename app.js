@@ -407,15 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
             exportCsvButton.classList.remove('hidden');
             document.querySelectorAll('.action-record-visit, .action-update-details')
                 .forEach(el => el.classList.remove('hidden'));
+            document.querySelectorAll('.action-delete-user').forEach(el => el.classList.remove('hidden'));
         } else if (role === 'records') {
             navRegister.classList.remove('hidden');
             exportCsvButton.classList.remove('hidden');
             document.querySelectorAll('.action-update-details').forEach(el => el.classList.remove('hidden'));
         } else if (role === 'clinician') {
-            document.querySelectorAll('.action-record-visit').forEach(el => el.classList.remove('hidden'));
-        }
-
-        if (role === 'admin') {
             document.querySelectorAll('.action-record-visit').forEach(el => el.classList.remove('hidden'));
         }
     }
@@ -424,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPatients();
     updateFacilityHeader();
     showPage(dashboardPage, navDashboard);
-    // applyPermissions is called within loadPatients -> renderPatientTable
+    applyPermissions(); // Apply permissions for static elements on initial load
 
     // --- Global Function Definitions ---
     async function viewVisits(patientId) {
